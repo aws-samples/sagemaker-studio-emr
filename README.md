@@ -10,5 +10,5 @@ clusters, in order to run interactive Spark and ML workloads through a single in
     * [Part 2: Cross Account](https://aws.amazon.com/blogs/machine-learning/part-2-create-and-manage-amazon-emr-clusters-from-sagemaker-studio-to-run-interactive-spark-and-ml-workloads/)
 
 
-![SingleAccount](static/SingleAccount.png)
+![SingleAccount](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2021/11/30/ML-6841-PART1-image003.png)
 
