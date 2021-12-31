@@ -21,7 +21,11 @@ existing EMR clusters. Several kernels include the
 connectivity and generating pre-signed SparkUI links for debugging. 
 
 User's can leverage the [SparkMagic](https://github.com/jupyter-incubator/sparkmagic) kernels for
-interactively working with remote Spark clusters through [Livy](http://livy.incubator.apache.org./).
+interactively working with remote Spark clusters through [Livy](http://livy.incubator.apache.org./) or libraries such 
+as PyHive can be used after connection to the cluster has been established.
+
+Lastly, we show examples of [locally running Spark](interactive_notebooks/LocalSpark) within SageMaker Studio 
+notebooks since this is often done during while prototyping prior to standing up an EMR cluster.
 
 For more information and examples see the Interactive Spark directory's [README](interactive_notebooks/README.md)
 
