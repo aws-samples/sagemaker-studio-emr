@@ -1,4 +1,5 @@
 # SageMaker Studio EMR Integration
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This is a repository of examples, templates, and informative links which guide SageMaker Studio users
 to run EMR data processing in conjunction with their ML workloads form a single interface.
