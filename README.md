@@ -1,7 +1,9 @@
 # SageMaker Studio EMR Integration
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-This is a sample repository of templates and example notebooks which enable Studio users to create and manage Amazon EMR 
-clusters, in order to run interactive Spark and ML workloads through a single interface.
+This is a repository of examples, templates, and informative links which guide SageMaker Studio users
+to run EMR data processing in conjunction with their ML workloads form a single interface.
+
 
 ### Related Blogs
 * [Perform interactive data engineering and data science workflows from Amazon SageMaker Studio notebooks](https://aws.amazon.com/blogs/machine-learning/perform-interactive-data-engineering-and-data-science-workflows-from-amazon-sagemaker-studio-notebooks/)
@@ -11,4 +13,6 @@ clusters, in order to run interactive Spark and ML workloads through a single in
 
 
 ![SingleAccount](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2021/11/30/ML-6841-PART1-image003.png)
+
+
 
