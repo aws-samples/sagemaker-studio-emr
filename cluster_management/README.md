@@ -19,7 +19,7 @@ Example Templates:
 ![create_cluster](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2021/11/30/ML-6841-PART1-image024.png)
 
 ## Modifying EMR Clusters
-* Install Python libraries on a running EMR cluster (Coming Soon)
+* [Install Python libraries on a running EMR cluster](install_py_libraries.ipynb)
 
 ## Terminating EMR Clusters
 The SageMaker Studio notebook interface lets user's seamlessly terminate EMR Clusters after they are done with them.
