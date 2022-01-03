@@ -4,7 +4,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This is a repository of examples, templates, and informative links which guide SageMaker Studio users
-to manage clusters and run EMR workloads in conjunction with typical SageMaker ML tasks. Typically, these workloads 
+to manage clusters and run EMR workloads in conjunction with SageMaker ML tasks. Typically, these workloads 
 involve utilization of Apache Spark, but we'll also show integrations with other analytic libraries like PyHive and 
 Presto.
 
