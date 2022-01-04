@@ -11,7 +11,7 @@ to debug.
   * Requires a [BYO Studio Image for local Scala execution](https://github.com/aws-samples/sagemaker-studio-custom-image-samples/tree/main/examples/scala-image)
 * [SparkMagic Functionality](sparkmagic-example.ipynb)
 * [PyHive Functionality](pyhive-example.ipynb)
-* [Installing Python libraries on a running EMR cluster](../interactive_notebooks/install_py_libraries.ipynb)
+* [Installing Python libraries on a running EMR cluster](../interactive_notebooks/install-py-libraries.ipynb)
 * EMR PySpark + SageMaker PyTorch Example (Coming Soon)
 * EMR PySpark + SageMaker TensorFlow Example (Coming Soon)
 * Presto Analytics (Coming Soon)
