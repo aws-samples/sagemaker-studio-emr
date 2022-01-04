@@ -58,6 +58,15 @@ Parameters:
     AllowedValues:
     - emr-5.33.1
     - emr-6.4.0
+  VpcId: # This can be hardcoded by DevOps Admin
+    Type: String
+    Description: 'SageMaker Studio VPCId'
+  SagemakerStudioSecurityGroupId: # This can be hardcoded by DevOps Admin
+    Type: String
+    Description: Security group id.
+  SagemakerStudioSubnetId:  # This can be hardcoded by DevOps Admin
+    Type: String
+    Description: Subnet id.
 Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
@@ -73,7 +82,7 @@ Resources:
         FromPort: -1
         ToPort: -1
         CidrIp: 0.0.0.0/0
-      VpcId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioVPCId
+      VpcId: !Ref VpcId
   slaveSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -83,7 +92,7 @@ Resources:
         FromPort: -1
         ToPort: -1
         CidrIp: 0.0.0.0/0
-      VpcId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioVPCId
+      VpcId: !Ref VpcId
   emrServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -93,7 +102,7 @@ Resources:
         FromPort: -1
         ToPort: -1
         CidrIp: 0.0.0.0/0
-      VpcId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioVPCId
+      VpcId: !Ref VpcId
   emrMasterIngressSelfICMP:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -162,7 +171,7 @@ Resources:
       IpProtocol: tcp
       FromPort: 8998
       ToPort: 8998
-      SourceSecurityGroupId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioSecurityGroup
+      SourceSecurityGroupId: !Ref SagemakerStudioSecurityGroupId
   emrMasterIngressHiveSG:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -171,7 +180,7 @@ Resources:
       IpProtocol: tcp
       FromPort: 10000
       ToPort: 10000
-      SourceSecurityGroupId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioSecurityGroup
+      SourceSecurityGroupId: !Ref SagemakerStudioSecurityGroupId
   emrMasterIngressServiceSg:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -479,7 +488,7 @@ Resources:
       IpProtocol: tcp
       FromPort: 88
       ToPort: 88
-      SourceSecurityGroupId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioSecurityGroup
+      SourceSecurityGroupId: !Ref SagemakerStudioSecurityGroupId
   emrMasterIngressKDCAdminSG:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -488,7 +497,7 @@ Resources:
       IpProtocol: tcp
       FromPort: 749
       ToPort: 749
-      SourceSecurityGroupId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioSecurityGroup
+      SourceSecurityGroupId: !Ref SagemakerStudioSecurityGroupId
   emrMasterIngressKinit464SG:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -497,7 +506,7 @@ Resources:
       IpProtocol: tcp
       FromPort: 464
       ToPort: 464
-      SourceSecurityGroupId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioSecurityGroup
+      SourceSecurityGroupId: !Ref SagemakerStudioSecurityGroupId
   allowEMRFSAccessForUser1:
     Type: AWS::IAM::Role
     Properties:
@@ -694,7 +703,7 @@ Resources:
             Ref: MasterInstanceType
           Market: ON_DEMAND
           Name: masterNode
-        Ec2SubnetId: !ImportValue SagemakerEMRNoAuthProduct-SagemakerStudioSubnetId
+        Ec2SubnetId: !Ref SagemakerStudioSubnetId
         EmrManagedMasterSecurityGroup:
           Ref: masterSecurityGroup
         EmrManagedSlaveSecurityGroup:

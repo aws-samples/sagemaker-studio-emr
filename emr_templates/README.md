@@ -9,11 +9,11 @@ SageMaker Studio users.
 
 ## Service Catalog Templates
 SageMaker Studio users can leverage provisioned [AWS Service Catalog](https://aws.amazon.com/servicecatalog/) templates 
-to spin up EMR clusters that have authorized by a team's DevOps administrators.
+to spin up EMR clusters that have been authorized by a team's DevOps administrators.
 
 Example Templates:
 * [Single Account](single-account.yaml)
-* [Multi Account ](cross-account.yaml)
+* [Cross Account](cross-account.yaml)
 * EMR on EC2 Spot Instances (Coming Soon)
 * EMR on EC2 Graviton Instances (Coming Soon)
 * Autoscaling EMR Cluster (Coming Soon)
