@@ -40,7 +40,7 @@ Resources:
         - Name: SageMaker Studio Domain No Auth EMR
           Description: Provisions a SageMaker domain and No Auth EMR Cluster
           Info:
-            LoadTemplateFromURL: https://aws-ml-blog.s3.amazonaws.com/artifacts/astra-m4-sagemaker/existing-studio-domain/CFN-EMR-ExistingStudioNoAuthTemplate.yaml
+            LoadTemplateFromURL: https://aws-ml-blog.s3.amazonaws.com/artifacts/astra-m4-sagemaker/existing-studio-domain/single-account.yaml
       Tags:
         - Key: "sagemaker:studio-visibility:emr"
           Value: "true"

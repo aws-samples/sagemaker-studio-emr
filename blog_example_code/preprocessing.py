@@ -1,7 +1,5 @@
 import argparse
 import os
-import re
-import csv
 import warnings
 
 import pandas as pd
@@ -9,7 +7,8 @@ import pandas as pd
 from sklearn.exceptions import DataConversionWarning
 
 warnings.filterwarnings(action="ignore", category=DataConversionWarning)
-
+import re
+import csv
 
 labels_dict = {"positive": "__label__positive", "negative": "__label__negative"}
 
