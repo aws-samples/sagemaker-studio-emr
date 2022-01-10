@@ -40,6 +40,18 @@ We've created a guided workshop for users to become familiar with SageMaker Stud
 
 For more information see the Workshop directory's [README](workshop/README.md)
 
+## CDK
+
+We have provided a CDK sample app in the `cdk` folder that demonstrates the deployment of 
+a VPC, a SageMaker Studio domain, and a Service Catalog product that enables studio users 
+to deploy and interact with an EMR cluster. It is based on the CloudFormation templates provided 
+in this blog post: 
+
+[https://aws.amazon.com/blogs/machine-learning/part-1-create-and-manage-amazon-emr-clusters-from-sagemaker-studio-to-run-interactive-spark-and-ml-workloads/](https://aws.amazon.com/blogs/machine-learning/part-1-create-and-manage-amazon-emr-clusters-from-sagemaker-studio-to-run-interactive-spark-and-ml-workloads/)
+
+The CDK application is written in Typescript to facilitate future conversion to a construct 
+library that can be published to various languages with JSII and listed on the [Construct Hub](https://constructs.dev).
+
 ## FAQs
 * What is the [sagemaker-spark](https://github.com/aws/sagemaker-spark) repository and how does it relate?
 * How can I run local spark testing within SageMaker Studio notebooks?
