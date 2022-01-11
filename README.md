@@ -59,3 +59,13 @@ library that can be published to various languages with JSII and listed on the [
 
 ## Formatting
 We utilize black for `.py` and `.ipynb` formatting in this repository. 
+
+Do the following to start a Python environment and run black before committing:
+
+```sh
+python3 -m venv .env  
+source .env/bin/activate
+pip install black 
+pip install "black[jupyter]"     
+black --exclude ".env|node_modules" ./
+```
