@@ -15,6 +15,7 @@ of those templates in Typescript using L2 constructs when they are available.
 npm run build
 npx cdk synth
 npx cdk deploy
+```
 
 ## Note on SageMaker L2 construct
 
