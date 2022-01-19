@@ -9,6 +9,13 @@ https://aws.amazon.com/blogs/machine-learning/part-1-create-and-manage-amazon-em
 The blog referenced two CloudFormation templates. This CDK application is a re-write 
 of those templates in Typescript using L2 constructs when they are available.
 
+## Deployment
+
+```sh
+npm run build
+npx cdk synth
+npx cdk deploy
+
 ## Note on SageMaker L2 construct
 
 There are currently no L2s, only an old PR that is *very* unlikely to merged soon given the priority attached to it: https://github.com/aws/aws-cdk/pull/6107
