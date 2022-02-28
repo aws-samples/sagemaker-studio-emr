@@ -1,4 +1,4 @@
-![SageMaker](https://github.com/aws/amazon-sagemaker-examples/raw/master/_static/sagemaker-banner.png)
+![SageMaker](https://raw.githubusercontent.com/aws/amazon-sagemaker-examples/main/_static/sagemaker-banner.png)
 
 # SageMaker Studio EMR Integration
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
