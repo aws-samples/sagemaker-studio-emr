@@ -29,21 +29,10 @@ notebooks since this is often done during while prototyping prior to standing up
 
 For more information and examples see the Interactive Spark directory's [README](interactive_notebooks/README.md)
 
-
-## Submitting EMR Jobs
-
-For more information and examples see the Submitting Spark Job directory's [README](job_submission/README.md)
-
-
 ## Workshop
 We've created a guided workshop for users to become familiar with SageMaker Studio's EMR integration.
 
 For more information see the Workshop directory's [README](workshop/README.md)
-
-## FAQs
-* What is the [sagemaker-spark](https://github.com/aws/sagemaker-spark) repository and how does it relate?
-* How can I run local spark testing within SageMaker Studio notebooks?
-* How can I interact with AWS Glue from SageMaker Studio?
 
 ## Formatting
 We utilize black for `.py` and `.ipynb` formatting in this repository. 

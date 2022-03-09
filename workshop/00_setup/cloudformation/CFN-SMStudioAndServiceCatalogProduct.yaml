@@ -6,9 +6,7 @@ Description: >
   This template is for an account without a pre-existing SageMaker Studio Domain & SageMaker User Profile - it creates these.
   This template populates Service Catalog with a Product, a LaunchConstrant and a ProductPrincipalAssociation.
   The Service Catalog Product consists of another cloudformation template for launching EMR, that matches this template (NoStudio)
-  It creates the Studio Domain in a private VPC and establishes connectivity with EMR via No-Auth as described in
-     "https://aws.amazon.com/blogs/machine-learning/perform-interactive-data-engineering-and-data-science-workflows-from-amazon-sagemaker-studio-notebooks/"
-
+  It creates the Studio Domain in a private VPC and establishes connectivity with EMR via No-Auth"
 Mappings:
   VpcConfigurations:
     cidr:
@@ -400,7 +398,7 @@ Resources:
         - Name: SageMaker Studio Domain No Auth EMR
           Description: Provisions a SageMaker domain and No Auth EMR Cluster
           Info:
-            LoadTemplateFromURL: https://aws-ml-blog.s3.amazonaws.com/artifacts/astra-m4-sagemaker/end-to-end/CFN-EMR-NoStudioNoAuthTemplate.yaml
+            LoadTemplateFromURL: https://ee-assets-prod-us-east-1.s3.amazonaws.com/modules/183f0dce72fc496f85c6215965998db5/v1/CFN-EMR.yaml
       Tags:
         - Key: "sagemaker:studio-visibility:emr"
           Value: "true"
@@ -427,8 +425,8 @@ Resources:
               - s3:*
               Effect: Allow
               Resource:
-              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-blog-*/*"
-              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-blog-*"
+              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-workshop-cluster-*/*"
+              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-workshop-cluster-*"
             - Action:
               - s3:GetObject
               Effect: Allow
@@ -555,16 +553,16 @@ Outputs:
     Description: The ID of the Sagemaker Studio VPC
     Value: !Ref VPC
     Export:
-      Name: !Sub "${AWS::StackName}-SagemakerStudioVPCId"
+      Name: "SagemakerEMRNoAuthWithStudio-SagemakerStudioVPCId"
  
   SagemakerStudioSubnetId:
     Description: The Subnet Id of Sagemaker Studio
     Value: !Ref PrivateSubnet1
     Export:
-      Name: !Sub "${AWS::StackName}-SagemakerStudioSubnetId"
+      Name: "SagemakerEMRNoAuthWithStudio-SagemakerStudioSubnetId"
  
   SagemakerStudioSecurityGroup:
     Description: The Security group of Sagemaker Studio instance
     Value: !Ref SageMakerInstanceSecurityGroup
     Export:
-      Name: !Sub "${AWS::StackName}-SagemakerStudioSecurityGroup"
+      Name: "SagemakerEMRNoAuthWithStudio-SagemakerStudioSecurityGroup"
