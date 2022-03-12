@@ -2,7 +2,7 @@
 
 Workshop Link: TBD
 
-# Welcome to the SageMaker Studio + EMR Workshop!
+## Welcome to the SageMaker Studio + EMR Workshop!
 
 Analyzing, transforming, and preparing large amounts of data is a foundational step of any data
 science and ML workflow. Data workers such as data scientists and data engineers use Apache
