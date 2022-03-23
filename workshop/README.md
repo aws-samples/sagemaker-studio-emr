@@ -1,6 +1,6 @@
 # SageMaker Studio + EMR Workshop
 
-Workshop Link: TBD
+Workshop Link: [https://catalog.workshops.aws/sagemaker-studio-emr/](https://catalog.workshops.aws/sagemaker-studio-emr/)
 
 ## Welcome to the SageMaker Studio + EMR Workshop!
 
