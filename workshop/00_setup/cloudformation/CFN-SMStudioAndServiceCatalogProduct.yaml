@@ -398,7 +398,7 @@ Resources:
         - Name: SageMaker Studio Domain No Auth EMR
           Description: Provisions a SageMaker domain and No Auth EMR Cluster
           Info:
-            LoadTemplateFromURL: https://ee-assets-prod-us-east-1.s3.amazonaws.com/modules/183f0dce72fc496f85c6215965998db5/v1/CFN-EMR.yaml
+            LoadTemplateFromURL: https://ee-assets-prod-us-east-1.s3.amazonaws.com/modules/183f0dce72fc496f85c6215965998db5/v2/CFN-EMR-AutoTerminate.yaml
       Tags:
         - Key: "sagemaker:studio-visibility:emr"
           Value: "true"

@@ -8,11 +8,15 @@ to manage clusters and run EMR workloads in conjunction with SageMaker ML tasks.
 involve utilization of Apache Spark, but we'll also show integrations with other analytic libraries like PyHive and 
 Presto.
 
-## Example EMR Templates
+## CloudFormation
 SageMaker Studio provides users the ability to visually browse and connect to Amazon EMR clusters right from the Studio 
-notebook. Additionally, you can now create, stop, and manage EMR clusters directly from Studio.
+notebook. Additionally, you can now provision and terminate EMR clusters directly from Studio. In the cloudformation 
+directory you'll find:
 
-For more information and examples see the Example EMR Templates' [README](emr_templates/README.md)
+1. Example EMR Templates that can be provisioned through SageMaker Studio using service catalog
+2. Getting started templates that include end-to-end VPC, Studio, and EMR cluster CFN Stacks
+
+For more information and examples see the Example EMR Templates' [README](cloudformation/emr_servicecatalog_templates/README.md)
 
 ## Interactive Notebooks
 SageMaker Studio supports interactive EMR processing through a graphical and programmatic way of connecting to 
