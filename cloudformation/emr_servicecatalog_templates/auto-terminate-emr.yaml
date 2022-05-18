@@ -11,7 +11,7 @@ Mappings:
   ClusterConfigurations:
     emr:
       masterInstanceCount: 1
-      BootStrapScriptFile: installpylibs.sh
+      BootStrapScriptFile: installpylibs-v2.sh
       StepScriptFile: configurekdc.sh
 Parameters:
   SageMakerProjectName:
@@ -673,7 +673,7 @@ Resources:
           - dummy
           - parameter
           Path:
-            Fn::Sub: s3://${S3Bucket}/artifacts/sma-milestone1/installpylibs.sh
+            Fn::Sub: s3://${S3Bucket}/artifacts/sma-milestone1/installpylibs-v2.sh
       AutoScalingRole: EMR_AutoScaling_DefaultRole
       Configurations:
       - Classification: livy-conf
