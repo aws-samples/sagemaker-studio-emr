@@ -1,0 +1,194 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  This cloudformation template enables SageMaker Studio to launch and connect to EMR clusters.
+  The EMR cluster is launched via Service Catalog.
+  This template populates Service Catalog with a Product, a LaunchConstrant and a ProductPrincipalAssociation.
+  This template is for an account with an existing SageMaker Studio Domain & SageMaker User Profile and does not create these.
+  The Service Catalog Product consists of another cloudformation template for launching EMR, that matches this template (ExistingStudio).
+  It enables Amazon EMR cluster connectivity with No-Auth authentication mode and expects Studio to be running in a private VPC as described in
+   "https://aws.amazon.com/blogs/machine-learning/perform-interactive-data-engineering-and-data-science-workflows-from-amazon-sagemaker-studio-notebooks"
+ 
+Parameters:
+  StudioExecutionRole:
+    Type: String
+    Description: Specify an ARN of the studio execution role to share this product with
+    Default: arn:aws:iam::[account number]:role/[role name]
+
+  SagemakerStudioVPCId:
+    Type: String
+    Description: The VPC Id associated with Sagemaker Studio domain
+    Default: vpc-xxxxxxxxx
+
+  SagemakerStudioSubnetId:
+    Type: String
+    Description: A Subnet Id reachable from Sagemaker Studio domain
+    Default: subnet-xxxxxxxxxx
+
+  SagemakerStudioSecurityGroup:
+    Type: String
+    Description: The Security Group associated with Sagemaker Studio domain
+    Default: sg-xxxxxxxxxxx
+ 
+Resources:
+  # Products populated to Service Catalog
+  ###################################################  
+  
+  SageMakerStudioEMRNoAuthProduct:
+    Type: AWS::ServiceCatalog::CloudFormationProduct
+    Properties:
+      Owner: AWS
+      Name: SageMaker Studio Domain No Auth EMR
+      ProvisioningArtifactParameters:
+        - Name: SageMaker Studio Domain No Auth EMR
+          Description: Provisions a SageMaker domain and No Auth EMR Cluster
+          Info:
+            LoadTemplateFromURL: https://aws-ml-blog.s3.amazonaws.com/artifacts/astra-m4-sagemaker/existing-studio-domain/CFN-EMR-ExistingStudioNoAuthTemplate-v2.yaml
+      Tags:
+        - Key: "sagemaker:studio-visibility:emr"
+          Value: "true"
+ 
+  SageMakerStudioEMRNoAuthProductPortfolio:
+    Type: AWS::ServiceCatalog::Portfolio
+    Properties:
+      ProviderName: AWS
+      DisplayName: SageMaker Product Portfolio
+ 
+  SageMakerStudioEMRNoAuthProductPortfolioAssociation:
+    Type: AWS::ServiceCatalog::PortfolioProductAssociation
+    Properties:
+      PortfolioId: !Ref SageMakerStudioEMRNoAuthProductPortfolio
+      ProductId: !Ref SageMakerStudioEMRNoAuthProduct
+ 
+  EMRNoAuthLaunchConstraint:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Policies:
+        - PolicyDocument:
+            Statement:
+            - Action:
+              - s3:*
+              Effect: Allow
+              Resource: 
+              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-blog-*/*"
+              - !Sub "arn:${AWS::Partition}:s3:::sm-emr-sc-blog-*"
+            - Action:
+              - s3:GetObject
+              Effect: Allow
+              Resource: "*"
+              Condition:
+                StringEquals:
+                  s3:ExistingObjectTag/servicecatalog:provisioning: 'true'
+          PolicyName: !Sub ${AWS::StackName}-${AWS::Region}-S3-Policy
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - "sns:Publish"
+                Effect: Allow
+                Resource: !Sub "arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:*"
+            Version: "2012-10-17"
+          PolicyName: SNSPublishPermissions
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - "ec2:CreateSecurityGroup"
+                  - "ec2:RevokeSecurityGroupEgress"
+                  - "ec2:DeleteSecurityGroup"
+                  - "ec2:createTags"
+                  - "ec2:AuthorizeSecurityGroupEgress"
+                  - "ec2:AuthorizeSecurityGroupIngress"
+                  - "ec2:RevokeSecurityGroupIngress"
+                Effect: Allow
+                Resource: "*"
+            Version: "2012-10-17"
+          PolicyName: EC2Permissions
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - "lambda:CreateFunction"
+                  - "lambda:InvokeFunction"
+                  - "lambda:DeleteFunction"
+                  - "lambda:GetFunction"
+                Effect: Allow
+                Resource: !Sub "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:SC-*"
+            Version: "2012-10-17"
+          PolicyName: LambdaPermissions
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - "elasticmapreduce:RunJobFlow"
+                Effect: Allow
+                Resource: !Sub "arn:${AWS::Partition}:elasticmapreduce:${AWS::Region}:${AWS::AccountId}:cluster/*"
+            Version: "2012-10-17"
+          PolicyName: EMRRunJobFlowPermissions
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - "iam:CreateRole"
+                  - "iam:DetachRolePolicy"
+                  - "iam:AttachRolePolicy"
+                  - "iam:DeleteRolePolicy"
+                  - "iam:DeleteRole"
+                  - "iam:PutRolePolicy"
+                  - "iam:PassRole"
+                Effect: Allow
+                Resource: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/SC-*"
+              - Action:
+                  - "iam:CreateInstanceProfile"
+                  - "iam:RemoveRoleFromInstanceProfile"
+                  - "iam:DeleteInstanceProfile"
+                  - "iam:AddRoleToInstanceProfile"
+                Effect: Allow
+                Resource: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:instance-profile/SC-*"
+            Version: "2012-10-17"
+          PolicyName: IAMPermissions
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Effect: "Allow"
+            Principal:
+              Service: 
+                - "servicecatalog.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AWSServiceCatalogAdminFullAccess"
+        - "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AmazonEMRFullAccessPolicy_v2"
+ 
+# Sets the principal who can initiate provisioning from Service Catalog
+#######################################################################
+  
+  SageMakerStudioEMRNoAuthProductPortfolioPrincipalAssociation:
+    Type: AWS::ServiceCatalog::PortfolioPrincipalAssociation
+    Properties:
+      PrincipalARN: !Ref StudioExecutionRole
+      PortfolioId: !Ref SageMakerStudioEMRNoAuthProductPortfolio
+      PrincipalType: IAM
+ 
+  SageMakerStudioPortfolioLaunchRoleConstraint:
+    Type: AWS::ServiceCatalog::LaunchRoleConstraint
+    Properties:
+      PortfolioId: !Ref SageMakerStudioEMRNoAuthProductPortfolio
+      ProductId: !Ref SageMakerStudioEMRNoAuthProduct
+      RoleArn: !GetAtt EMRNoAuthLaunchConstraint.Arn
+      Description: Role used for provisioning
+ 
+Outputs:
+  SagemakerStudioVPCId:
+    Description: The ID of the Sagemaker Studio VPC
+    Value: !Ref SagemakerStudioVPCId
+    Export:
+      Name: !Sub "${AWS::StackName}-SagemakerStudioVPCId"
+ 
+  SagemakerStudioSubnetId:
+    Description: The Subnet Id of Sagemaker Studio
+    Value: !Ref SagemakerStudioSubnetId
+    Export:
+      Name: !Sub "${AWS::StackName}-SagemakerStudioSubnetId"
+ 
+  SagemakerStudioSecurityGroup:
+    Description: The Security group of Sagemaker Studio instance
+    Value: !Ref SagemakerStudioSecurityGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-SagemakerStudioSecurityGroup"
