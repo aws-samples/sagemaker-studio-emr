@@ -22,7 +22,7 @@ Parameters:
 
   SagemakerStudioSubnetId:
     Type: String
-    Description: A Subnet Id reachable from Sagemaker Studio domain
+    Description: A Private Subnet Id reachable from Sagemaker Studio domain
     Default: subnet-xxxxxxxxxx
 
   SagemakerStudioSecurityGroup:
