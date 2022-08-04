@@ -106,6 +106,7 @@ Resources:
             Statement:
               - Action:
                   - "lambda:CreateFunction"
+                  - "lambda:TagResource"
                   - "lambda:InvokeFunction"
                   - "lambda:DeleteFunction"
                   - "lambda:GetFunction"
