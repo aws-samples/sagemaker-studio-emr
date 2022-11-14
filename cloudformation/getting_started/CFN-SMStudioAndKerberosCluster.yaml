@@ -578,7 +578,8 @@ Resources:
       IpProtocol: '-1'
       GroupId: !Ref VPCEndpointSecurityGroup
       SourceSecurityGroupId: !Ref SageMakerInstanceSecurityGroup
-
+  
+  # Be advised, AmazonSageMakerFullAccess provides access to a broad range of capabilities.
   SageMakerExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
