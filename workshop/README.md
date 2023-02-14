@@ -18,3 +18,4 @@ subsequently train machine learning models. We'll cover:
     * Natural Language Processing (NLP) sentiment analysis
     * DeepAR time series analysis
 4. How to build datasets using EMR, prototype TensorFlow models and data loaders in Studio Notebooks, and scale training on SageMaker ephemeral training jobs
+5. How to train models on EMR, and subsequently host them on SageMaker
