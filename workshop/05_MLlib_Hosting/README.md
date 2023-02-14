@@ -1,4 +1,4 @@
-# SageMaker + EMR: MLlib model training * Hosting on SageMaker
+# SageMaker + EMR: MLlib model training & Hosting on SageMaker
 
 In this lab, we're going to utilize our knowledge of connecting and interacting with EMR clusters in order to train a 
 model using Spark MLlib. We'll serialize this model and then host it on SageMaker. 
