@@ -14,9 +14,6 @@ to spin up EMR clusters that have been authorized by a team's DevOps administrat
 Example Templates:
 * [Single Account](single-account.yaml)
 * [Cross Account](cross-account.yaml)
-* EMR on EC2 Spot Instances (Coming Soon)
-* EMR on EC2 Graviton Instances (Coming Soon)
-* Autoscaling EMR Cluster (Coming Soon)
 * [Auto-terminating EMR Clusters](auto-terminate-emr.yaml)
 
 ![create_cluster](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2021/11/30/ML-6841-PART1-image024.png)
