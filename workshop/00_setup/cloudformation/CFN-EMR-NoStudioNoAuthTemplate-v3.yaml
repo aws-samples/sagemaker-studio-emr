@@ -1,0 +1,367 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Brings up EMR cluster in No-Auth mode,
+  passing in SageMaker vpc id, security group, subnet id parameters as inputs from previous cfn run that created them.
+  '
+Parameters:
+  SageMakerProjectName:
+    Type: String
+    Description: Name of the project
+  SageMakerProjectId:
+    Type: String
+    Description: Service generated Id of the project.
+  EmrClusterName:
+    Type: String
+    Description: EMR cluster Name.
+  MasterInstanceType:
+    Type: String
+    Description: Instance type of the EMR master node.
+    Default: r4.xlarge
+    AllowedValues:
+    - m5.xlarge
+    - m5.2xlarge
+    - m5.4xlarge
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - r4.xlarge
+    - r4.2xlarge
+    - r4.4xlarge
+  CoreInstanceType:
+    Type: String
+    Description: Instance type of the EMR core nodes.
+    Default: r4.xlarge
+    AllowedValues:
+    - m5.xlarge
+    - m5.2xlarge
+    - m5.4xlarge
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - r4.xlarge
+    - r4.2xlarge
+    - r4.4xlarge
+  CoreInstanceCount:
+    Type: String
+    Description: Number of core instances in the EMR cluster.
+    Default: '2'
+    AllowedValues:
+    - '2'
+    - '5'
+    - '10'
+  EmrReleaseVersion:
+    Type: String
+    Description: The release version of EMR to launch.
+    Default: emr-6.9.0
+    AllowedValues:
+    - emr-5.33.1
+    - emr-6.7.0
+    - emr-6.6.0
+    - emr-6.8.0
+    - emr-6.9.0
+  IdleTimeout:
+    Type: Number
+    Description: Terminate EMR cluster automatically after x amount of seconds of inactivity.
+    Default: 7200
+    ConstraintDescription: Must be between 60 seconds - 7 days (604800 seconds)
+Resources:
+  masterSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EMR Master SG
+      Tags:
+        - Key: "for-use-with-amazon-emr-managed-policies"
+          Value: "true"
+      SecurityGroupEgress:
+      - IpProtocol: -1
+        FromPort: -1
+        ToPort: -1
+        CidrIp: 0.0.0.0/0
+      VpcId: !ImportValue SageMakerEMRDemoCloudformationVPCId
+  slaveSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EMR Slave SG
+      Tags:
+        - Key: "for-use-with-amazon-emr-managed-policies"
+          Value: "true"
+      SecurityGroupEgress:
+      - IpProtocol: -1
+        FromPort: -1
+        ToPort: -1
+        CidrIp: 0.0.0.0/0
+      VpcId: !ImportValue SageMakerEMRDemoCloudformationVPCId
+  emrServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EMR Service Access SG
+      Tags:
+        - Key: "for-use-with-amazon-emr-managed-policies"
+          Value: "true"
+      SecurityGroupEgress:
+      - IpProtocol: -1
+        FromPort: -1
+        ToPort: -1
+        CidrIp: 0.0.0.0/0
+      VpcId: !ImportValue SageMakerEMRDemoCloudformationVPCId
+  emrMasterIngressSelfICMP:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: icmp
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId:
+        Ref: masterSecurityGroup
+  emrMasterIngressSlaveICMP:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: icmp
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId:
+        Ref: slaveSecurityGroup
+  emrMasterIngressSelfAllTcp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: masterSecurityGroup
+  emrMasterIngressSlaveAllTcp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: slaveSecurityGroup
+  emrMasterIngressSelfAllUdp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: udp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: masterSecurityGroup
+  emrMasterIngressSlaveAllUdp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: udp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: slaveSecurityGroup
+  emrMasterIngressLivySG:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: tcp
+      FromPort: 8998
+      ToPort: 8998
+      SourceSecurityGroupId: !ImportValue SageMakerEMRDemoCloudformationSecurityGroup
+  emrMasterIngressHiveSG:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: tcp
+      FromPort: 10000
+      ToPort: 10000
+      SourceSecurityGroupId: !ImportValue SageMakerEMRDemoCloudformationSecurityGroup
+  emrMasterIngressServiceSg:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: masterSecurityGroup
+      IpProtocol: tcp
+      FromPort: 8443
+      ToPort: 8443
+      SourceSecurityGroupId:
+        Ref: emrServiceSecurityGroup
+  emrServiceIngressMasterSg:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: emrServiceSecurityGroup
+      IpProtocol: tcp
+      FromPort: 9443
+      ToPort: 9443
+      SourceSecurityGroupId:
+        Ref: masterSecurityGroup
+  emrSlaveIngressSelfICMP:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: slaveSecurityGroup
+      IpProtocol: icmp
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId:
+        Ref: slaveSecurityGroup
+  emrSlaveIngressMasterICMP:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: slaveSecurityGroup
+      IpProtocol: icmp
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId:
+        Ref: masterSecurityGroup
+  emrSlaveIngressSelfAllTcp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: slaveSecurityGroup
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: slaveSecurityGroup
+  emrSlaveIngressMasterAllTcp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: slaveSecurityGroup
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: masterSecurityGroup
+  emrSlaveIngressSelfAllUdp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: slaveSecurityGroup
+      IpProtocol: udp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: slaveSecurityGroup
+  emrSlaveIngressMasterAllUdp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: slaveSecurityGroup
+      IpProtocol: udp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId:
+        Ref: masterSecurityGroup
+  emrSlaveIngressServiceSg:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: slaveSecurityGroup
+      IpProtocol: tcp
+      FromPort: 8443
+      ToPort: 8443
+      SourceSecurityGroupId:
+        Ref: emrServiceSecurityGroup
+  EMRClusterinstanceProfile:
+    Properties:
+      Path: "/"
+      Roles: [ !ImportValue SageMakerEMRDemoCloudformationEMRClusterinstanceProfileRole ]
+    Type: AWS::IAM::InstanceProfile
+  EMRCluster:
+    Type: AWS::EMR::Cluster
+    Properties:
+      Name:
+        Ref: EmrClusterName
+      Tags:
+        - Key: "for-use-with-amazon-emr-managed-policies"
+          Value: "true"
+      Applications:
+      - Name: Spark
+      - Name: Hive
+      - Name: Livy
+      BootstrapActions:
+      - Name: Dummy bootstrap action
+        ScriptBootstrapAction:
+          Args:
+          - dummy
+          - parameter
+          Path:
+            !Sub ['s3://${S3Bucket}/artifacts/sma-milestone1/installpylibs-v2.sh', S3Bucket: !ImportValue SageMakerEMRDemoCloudformationS3BucketName]
+      AutoScalingRole: EMR_AutoScaling_DefaultRole
+      Configurations:
+      - Classification: livy-conf
+        ConfigurationProperties:
+          livy.server.session.timeout-check: false
+      EbsRootVolumeSize: 100
+      Instances:
+        CoreInstanceGroup:
+          EbsConfiguration:
+            EbsBlockDeviceConfigs:
+            - VolumeSpecification:
+                SizeInGB: '320'
+                VolumeType: gp2
+              VolumesPerInstance: '1'
+            EbsOptimized: 'true'
+          InstanceCount:
+            Ref: CoreInstanceCount
+          InstanceType:
+            Ref: CoreInstanceType
+          Market: ON_DEMAND
+          Name: coreNode
+        MasterInstanceGroup:
+          EbsConfiguration:
+            EbsBlockDeviceConfigs:
+            - VolumeSpecification:
+                SizeInGB: '320'
+                VolumeType: gp2
+              VolumesPerInstance: '1'
+            EbsOptimized: 'true'
+          InstanceCount: 1
+          InstanceType:
+            Ref: MasterInstanceType
+          Market: ON_DEMAND
+          Name: masterNode
+        Ec2SubnetId: !ImportValue SageMakerEMRDemoCloudformationSubnetId
+        EmrManagedMasterSecurityGroup:
+          Ref: masterSecurityGroup
+        EmrManagedSlaveSecurityGroup:
+          Ref: slaveSecurityGroup
+        ServiceAccessSecurityGroup:
+          Ref: emrServiceSecurityGroup
+        TerminationProtected: false
+      JobFlowRole:
+        Ref: EMRClusterinstanceProfile
+      LogUri: !Sub [ 's3://${S3Bucket}/cluster-logs/', S3Bucket: !ImportValue SageMakerEMRDemoCloudformationS3BucketName ]
+      ReleaseLabel:
+        Ref: EmrReleaseVersion
+      ServiceRole: !ImportValue SageMakerEMRDemoCloudformationEMRClusterServiceRole
+      VisibleToAllUsers: true
+      Steps:
+      - ActionOnFailure: CONTINUE
+        HadoopJarStep:
+          Args:
+          - !Sub [ 's3://${S3Bucket}/artifacts/sma-milestone1/configurekdc.sh', S3Bucket: !ImportValue SageMakerEMRDemoCloudformationS3BucketName ]
+          Jar:
+            Fn::Sub: s3://${AWS::Region}.elasticmapreduce/libs/script-runner/script-runner.jar
+          MainClass: ''
+        Name: run any bash or java job in spark
+      AutoTerminationPolicy:
+        IdleTimeout:
+          'Ref': IdleTimeout
+Outputs:
+  EMRMasterDNSName:
+    Description: DNS Name of the EMR Master Node
+    Value:
+      Fn::GetAtt:
+      - EMRCluster
+      - MasterPublicDNS

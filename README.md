@@ -8,6 +8,13 @@ to manage clusters and run EMR workloads in conjunction with SageMaker ML tasks.
 involve utilization of Apache Spark, but we'll also show integrations with other analytic libraries like PyHive and 
 Presto.
 
+## Workshop
+We've created a guided workshop for users to become familiar with SageMaker Studio's EMR integration:
+
+Workshop Link: [https://catalog.workshops.aws/sagemaker-studio-emr/](https://catalog.workshops.aws/sagemaker-studio-emr/)
+
+For more information see the Workshop directory's [README](workshop/README.md)
+
 ## CloudFormation
 SageMaker Studio provides users the ability to visually browse and connect to Amazon EMR clusters right from the Studio 
 notebook. Additionally, you can now provision and terminate EMR clusters directly from Studio. In the cloudformation 
@@ -32,11 +39,6 @@ Lastly, we show examples of [locally running Spark](interactive_notebooks/LocalS
 notebooks since this is often done during while prototyping prior to standing up an EMR cluster.
 
 For more information and examples see the Interactive Spark directory's [README](interactive_notebooks/README.md)
-
-## Workshop
-We've created a guided workshop for users to become familiar with SageMaker Studio's EMR integration.
-
-For more information see the Workshop directory's [README](workshop/README.md)
 
 ## Formatting
 We utilize black for `.py` and `.ipynb` formatting in this repository. 
