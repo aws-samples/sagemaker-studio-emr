@@ -568,7 +568,9 @@ Resources:
                   timer.cancel()
                   cfnresponse.send(event, context, status, {}, None)
   EMRCluster:
-    DependsOn: CopyZips
+    DependsOn: 
+      - CopyZips
+      - CleanUpBucketonDelete
     Type: 'AWS::EMR::Cluster'
     Properties:
       Name: !Ref EmrClusterName
